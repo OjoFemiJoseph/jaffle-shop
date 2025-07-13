@@ -27,6 +27,7 @@ jobs:
           pip install --upgrade pip
           pip install dbt-bigquery==1.7.5
           dbt --version
+          dbt deps
 
       # 3️⃣  Run whatever dbt command you need
       - name: Build the warehouse
