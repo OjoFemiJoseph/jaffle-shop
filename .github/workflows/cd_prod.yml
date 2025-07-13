@@ -4,7 +4,9 @@ name: dbt-CI
 on:
   push:
     branches: [main]
-
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}  
+  
 jobs:
   dbt-build:
     runs-on: ubuntu-latest
@@ -28,4 +30,4 @@ jobs:
 
       # 3️⃣  Run whatever dbt command you need
       - name: Build the warehouse
-        run: dbt build --threads 4
+        run: dbt build --profiles-dir . --threads 4
