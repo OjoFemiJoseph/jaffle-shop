@@ -1,0 +1,12 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: dbtproject-408423
+      dataset: dbt_meetup
+      threads: 4 # Must be a value of 1 or greater
+      keyfile: opoor.json
+      OPTIONAL_CONFIG: VALUE
+    
