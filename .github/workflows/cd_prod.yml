@@ -4,12 +4,6 @@ name: dbt-CI
 on:
   push:
     branches: [main]
-  pull_request:
-  workflow_dispatch:
-
-env:
-  DBT_PROFILES_DIR: ${{ github.workspace }}   # points dbt to the profiles.yml in the repo
-  DBT_GOOGLE_KEYFILE: ${{ runner.temp }}/sa.json
 
 jobs:
   dbt-build:
