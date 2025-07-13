@@ -1,79 +1,37 @@
-name: dbt Cloud Deploy Prod
+# .github/workflows/dbt.yml
+name: dbt-CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}   # points dbt to the profiles.yml in the repo
+  DBT_GOOGLE_KEYFILE: ${{ runner.temp }}/sa.json
 
 jobs:
-  run_snowflake:
-    name: dbt Cloud Deploy Prod Snowflake
-    runs-on: macos-latest
-
-    env:
-      DBT_ACCOUNT_ID: 188483
-      DBT_PROJECT_ID: 283328
-      DBT_PR_JOB_ID: 409009
-      DBT_API_KEY: ${{ secrets.DBT_CLOUD_API_KEY }}
-      DBT_JOB_CAUSE: "GitHub Actions Request"
-      DBT_JOB_BRANCH: main
-
+  dbt-build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v4"
-      - uses: "actions/setup-python@v5"
+      - uses: actions/checkout@v4
+
+      # 1️⃣  Write the secret to disk so dbt can read it
+      - name: Write service-account key
+        run: |
+          echo '${{ secrets.DBT_BQ }}' > "$DBT_GOOGLE_KEYFILE"
+
+      # 2️⃣  Set up Python and dbt
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Install uv
-        run: python3 -m pip install uv
-      - name: Install deps
-        run: uv pip install -r requirements.txt --system
-      - name: Run dbt Cloud job
-        run: python3 .github/workflows/scripts/dbt_cloud_run_job.py
+          python-version: '3.11'
+      - name: Install dbt
+        run: |
+          pip install --upgrade pip
+          pip install dbt-bigquery==1.7.5
+          dbt --version
 
-  run_bigquery:
-    name: dbt Cloud Deploy Prod BigQuery
-    runs-on: macos-latest
-
-    env:
-      DBT_ACCOUNT_ID: 188483
-      DBT_PROJECT_ID: 275557
-      DBT_PR_JOB_ID: 553247
-      DBT_API_KEY: ${{ secrets.DBT_CLOUD_API_KEY }}
-      DBT_JOB_CAUSE: "GitHub Actions Request"
-      DBT_JOB_BRANCH: main
-
-    steps:
-      - uses: "actions/checkout@v4"
-      - uses: "actions/setup-python@v5"
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        run: python3 -m pip install uv
-      - name: Install deps
-        run: uv pip install -r requirements.txt --system
-      - name: Run dbt Cloud job
-        run: python3 .github/workflows/scripts/dbt_cloud_run_job.py
-
-  run_postgres:
-    name: dbt Cloud Deploy Prod Postgres
-    runs-on: macos-latest
-
-    env:
-      DBT_ACCOUNT_ID: 188483
-      DBT_PROJECT_ID: 288405
-      DBT_PR_JOB_ID: 577871
-      DBT_API_KEY: ${{ secrets.DBT_CLOUD_API_KEY }}
-      DBT_JOB_CAUSE: "GitHub Actions Request"
-      DBT_JOB_BRANCH: main
-
-    steps:
-      - uses: "actions/checkout@v4"
-      - uses: "actions/setup-python@v5"
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        run: python3 -m pip install uv
-      - name: Install deps
-        run: uv pip install -r requirements.txt --system
-      - name: Run dbt Cloud job
-        run: python3 .github/workflows/scripts/dbt_cloud_run_job.py
+      # 3️⃣  Run whatever dbt command you need
+      - name: Build the warehouse
+        run: dbt build --threads 4
