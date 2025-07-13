@@ -14,7 +14,7 @@ jobs:
       # 1️⃣  Write the secret to disk so dbt can read it
       - name: Write service-account key
         run: |
-          echo '${{ secrets.DBT_BQ }}' > "$DBT_GOOGLE_KEYFILE"
+          echo '${{ secrets.DBT_BQ }}' > "opoor.json"
 
       # 2️⃣  Set up Python and dbt
       - uses: actions/setup-python@v5
