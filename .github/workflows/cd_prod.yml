@@ -13,9 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GCP_DBT_DATASET: ${{ vars.GCP_DBT_DATASET }}
-      GCP_BQ_LOCATION: ${{ vars.GCP_BQ_LOCATION }}
       GCP_BQ_PROJECT: ${{ vars.GCP_BQ_PROJECT }}
-      GCP_DBT_KEYFILE: ${{ secrets.GCP_DBT_KEYFILE }}
+      GCP_DBT_KEYFILE: ${{ secrets.DBT_BQ }}
       
     steps:
       - uses: actions/checkout@v4

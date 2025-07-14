@@ -11,7 +11,6 @@ default:
       # OPTIONAL_CONFIG: VALUE
       dataset: "{{ env_var('GCP_DBT_DATASET') }}"
       keyfile: "{{ env_var('GCP_DBT_KEYFILE') }}"
-      location: "{{ env_var('GCP_BQ_LOCATION') }}"
       method: service-account
       priority: interactive
       project: "{{ env_var('GCP_BQ_PROJECT') }}"
