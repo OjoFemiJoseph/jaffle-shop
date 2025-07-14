@@ -14,10 +14,13 @@ jobs:
     env:
       GCP_DBT_DATASET: ${{ vars.GCP_DBT_DATASET }}
       GCP_BQ_PROJECT: ${{ vars.GCP_BQ_PROJECT }}
-      GCP_DBT_KEYFILE: ${{ secrets.DBT_BQ }}
+      # GCP_DBT_KEYFILE: ${{ secrets.DBT_BQ }}
     steps:
       - uses: actions/checkout@v4
       # 2️⃣  Set up Python and dbt
+      - name: Write service-account key
+        run: echo '${{ secrets.DBT_BQ }}' > "opoor.json"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

@@ -10,7 +10,7 @@ default:
       # keyfile: opoor.json
       # OPTIONAL_CONFIG: VALUE
       dataset: "{{ env_var('GCP_DBT_DATASET') }}"
-      keyfile: "{{ env_var('GCP_DBT_KEYFILE') }}"
+      keyfile: opoor.json
       method: service-account
       prioriniity: interactive
       project: "{{ env_var('GCP_BQ_PROJECT') }}"
