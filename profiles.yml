@@ -2,11 +2,19 @@ default:
   target: dev
   outputs:
     dev:
-      type: bigquery
+      # type: bigquery
+      # method: service-account
+      # project: dbtproject-408423
+      # dataset: dbt_meetup
+      # threads: 4 # Must be a value of 1 or greater
+      # keyfile: opoor.json
+      # OPTIONAL_CONFIG: VALUE
+      dataset: "{{ env_var('GCP_DBT_DATASET') }}"
+      keyfile: "{{ env_var('GCP_DBT_KEYFILE') }}"
+      location: "{{ env_var('GCP_BQ_LOCATION') }}"
       method: service-account
-      project: dbtproject-408423
-      dataset: dbt_meetup
-      threads: 4 # Must be a value of 1 or greater
-      keyfile: opoor.json
-      OPTIONAL_CONFIG: VALUE
-    
+      priority: interactive
+      project: "{{ env_var('GCP_BQ_PROJECT') }}"
+      threads: 4
+      timeout_seconds: 300
+      type: bigquery

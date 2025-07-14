@@ -4,20 +4,21 @@ name: dbt-CI
 on:
   push:
     branches: [main]
-env:
-  DBT_PROFILES_DIR: ${{ github.workspace }}  
-  
+  pull_request:
+  workflow_dispatch:
+
+
 jobs:
   dbt-build:
     runs-on: ubuntu-latest
+    env:
+      GCP_DBT_DATASET: ${{ vars.GCP_DBT_DATASET }}
+      GCP_BQ_LOCATION: ${{ vars.GCP_BQ_LOCATION }}
+      GCP_BQ_PROJECT: ${{ vars.GCP_BQ_PROJECT }}
+      GCP_DBT_KEYFILE: ${{ secrets.GCP_DBT_KEYFILE }}
+      
     steps:
       - uses: actions/checkout@v4
-
-      # 1️⃣  Write the secret to disk so dbt can read it
-      - name: Write service-account key
-        run: |
-          echo '${{ secrets.DBT_BQ }}' > "opoor.json"
-
       # 2️⃣  Set up Python and dbt
       - uses: actions/setup-python@v5
         with:
@@ -27,8 +28,7 @@ jobs:
           pip install --upgrade pip
           pip install dbt-bigquery==1.7.5
           dbt --version
-          dbt deps
 
       # 3️⃣  Run whatever dbt command you need
       - name: Build the warehouse
-        run: dbt build --profiles-dir . --threads 4
+        run: dbt build --threads 4
