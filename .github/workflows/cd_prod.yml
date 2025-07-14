@@ -15,7 +15,6 @@ jobs:
       GCP_DBT_DATASET: ${{ vars.GCP_DBT_DATASET }}
       GCP_BQ_PROJECT: ${{ vars.GCP_BQ_PROJECT }}
       GCP_DBT_KEYFILE: ${{ secrets.DBT_BQ }}
-      
     steps:
       - uses: actions/checkout@v4
       # 2️⃣  Set up Python and dbt

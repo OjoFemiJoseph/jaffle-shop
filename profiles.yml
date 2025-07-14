@@ -12,7 +12,7 @@ default:
       dataset: "{{ env_var('GCP_DBT_DATASET') }}"
       keyfile: "{{ env_var('GCP_DBT_KEYFILE') }}"
       method: service-account
-      priority: interactive
+      prioriniity: interactive
       project: "{{ env_var('GCP_BQ_PROJECT') }}"
       threads: 4
       timeout_seconds: 300
